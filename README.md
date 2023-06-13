@@ -1,34 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 日向坂46アプリ
 
-## Getting Started
+## 技術スタック
 
-First, run the development server:
+* Next.js
+* Neo4j
+* Yoga (GraphQLサーバー)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+## 定義ファイル
+
+Neo4j用のデータとしてHTMLで記述したファイルを利用する.
+
+### Neo4jの構成
+
+Neo4jにはノードとその関係を定義するリレーションシップから構成されている.
+
+ノードとリレーションシップは, それぞれラベルとプロパティを持つことができる. ラベルはノードやリレーションシップをグループ化するための名前で, プロパティは各ノードの固有の値セットを表す.
+
+### ノード
+
+ノードは以下のようにHTMLで定義している.
+
+```html
+<div class=".node"
+    data-label="Member"
+    data-name="佐々木　久美"
+    data-ruby="ささき　くみ"
+    data-birthplace="千葉県"
+    data-birthday="1996/01/22"
+    data-generation="1">
+</div>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+この場合以下のようにJavaScriptでデータを取得する.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```js
+const node = document.querySelector('.node');
+const name = node.dataset.name;
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+リレーションシップはハイパーリンクを利用して定義している.
 
-## Learn More
+```html
+<a href="../group/Hinatazaka46.html"
+    class=".relationship"
+    data-label="BELONGS_TO"
+    data-since="2019/3/27">
+</a>
+```
 
-To learn more about Next.js, take a look at the following resources:
+ノードの時と同様でDOM APIを利用してデータを取得する.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```js
+const relationship = document.querySelectorAll('.relationship')
+const since = relationship.dataset.since;
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## HTMLを使う理由
 
-## Deploy on Vercel
+何故HTMLというのはあると思う.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+特にないが, 比較的慣れているからとグラフデータ特有の関係をリンクを使って簡単に定義できるからというのがある. Next.jsからはRSC(React Server Component)を使うこともあり, [jsdom](https://github.com/jsdom/jsdom)を使えば, フロントエンドへも直接データを渡しやすいかなと思う.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+データベースがない状態である程度フロントエンドを別々に開発できる.
+
+ただ記法としては面倒だなぁという思いもあるが大量の文章を書くのはどんな形式でもある程度のめんどくさが伴うものである.
