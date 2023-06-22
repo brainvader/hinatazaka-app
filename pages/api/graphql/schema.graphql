@@ -1,0 +1,48 @@
+type Member {
+    name: String!
+    ruby: String!
+    birthplace: String!
+    birthday: Date!
+    generation: Int!
+    belongsTo: [Group!]! @relationship(type: "BELONGS_TO", properties: "BelongsTo", direction: OUT)
+    selectedIn:[Song!]! @relationship(type: "SELECTED_IN", properties: "SelectedIn",  direction: OUT) 
+}
+
+type Group {
+    name: String!
+    ruby: String!
+    formationDate: Date!
+}
+
+type Song {
+    title: String! 
+    performedBy: Group! @relationship(type: "PERFORMED_BY", direction: OUT)
+    includedIn: [Discography!]! @relationship(type: "INCLUDED_IN", direction: OUT)
+}
+
+union Discography = Single | Album 
+
+type Single {
+    title: String!
+    order: Int!
+    releasedBy: [Group!]! @relationship(type: "RELEASED_BY" , properties: "ReleasedBy", direction: OUT)
+}
+
+type Album {
+    title: String!
+    order: Int!
+    releasedBy: [Group!]! @relationship(type: "RELEASED_BY" , properties: "ReleasedBy", direction: OUT)
+}
+
+interface BelongsTo @relationshipProperties {
+    from: Date!
+    until: Date
+}
+
+interface ReleasedBy @relationshipProperties {
+    at: Date!
+}
+
+interface SelectedIn @relationshipProperties {
+    at: Int!
+}
