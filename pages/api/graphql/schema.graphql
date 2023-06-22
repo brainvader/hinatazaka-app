@@ -25,13 +25,13 @@ union Discography = Single | Album
 type Single {
     title: String!
     order: Int!
-    releasedBy: [Group!]! @relationship(type: "RELEASED_BY" , properties: "ReleasedBy", dierction: OUT)
+    releasedBy: [Group!]! @relationship(type: "RELEASED_BY" , properties: "ReleasedBy", direction: OUT)
 }
 
 type Album {
     title: String!
     order: Int!
-    releasedBy: [Group!]! @relationship(type: "RELEASED_BY" , properties: "ReleasedBy", dierction: OUT)
+    releasedBy: [Group!]! @relationship(type: "RELEASED_BY" , properties: "ReleasedBy", direction: OUT)
 }
 
 interface BelongsTo @relationshipProperties {
