@@ -7,8 +7,8 @@ import { createYoga } from 'graphql-yoga';
 import { Neo4jGraphQL } from '@neo4j/graphql';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-const schemaFielName = './schema.graphql';
-const schemaPath = join(process.cwd(), 'pages', 'api', 'graphql', schemaFielName)
+const schemaFielName = 'schema.graphql';
+const schemaPath = join(process.cwd(), 'app', 'api', 'graphql', schemaFielName)
 
 // TODO: Need file check and raise error when something wrong happens
 const typeDefs = readFileSync(schemaPath, { encoding: 'utf-8' });
@@ -36,10 +36,16 @@ const initServer = async () => {
 };
 
 
-export default createYoga<{ req: NextApiRequest, res: NextApiResponse }>({
-    schema: await initServer(),
+const { handleRequest } = createYoga<{ req: NextApiRequest, res: NextApiResponse }>({
     graphqlEndpoint: "/api/graphql",
+    schema: await initServer(),
+    fetchAPI: {
+        Response: Response,
+        Request: Request,
+    },
 });
+
+export { handleRequest as GET, handleRequest as POST }
 
 
 // for debug to get see the configurations
